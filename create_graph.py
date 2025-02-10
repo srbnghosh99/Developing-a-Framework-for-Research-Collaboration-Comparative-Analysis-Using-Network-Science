@@ -16,11 +16,6 @@ def convert_list_to_underscore(names_list):
 def create_graph(inputfilename,outputfilename):
     new_df = pd.read_csv(inputfilename)
 
-    # def convert_list_to_underscore(names_list):
-    #     if isinstance(names_list, str):  # Convert string to list if necessary
-    #         names_list = ast.literal_eval(names_list)
-    #     return [name.replace(" ", "_") for name in names_list]
-
     new_df['authors_name'] = new_df['authors_name'].apply(convert_list_to_underscore)
 
     # new_df['authors_name'] = new_df['authors_name'].apply(ast.literal_eval)
@@ -34,12 +29,14 @@ def create_graph(inputfilename,outputfilename):
 
 
     for index, row in tqdm(new_df.iterrows(), total=len(new_df)):
-        for index, row in new_df.iterrows():
-            if len(row['authors_name']) > 1:
-                lis = row['authors_name']
-                list_combinations = list(combinations(lis, 2))
-                for edge in list_combinations:
-                    G.add_edge(edge[0], edge[1])
+        if len(row['authors_name']) > 1:
+            lis = row['authors_name']
+            timestamp = row['year']
+            # print(timestamp)
+            list_combinations = list(combinations(lis, 2))
+            for edge in list_combinations:
+                G.add_edge(edge[0], edge[1],weight = timestamp)
+            # break
 
     print(G.number_of_nodes(), G.number_of_edges())
     # nx.write_weighted_edgelist(G, "dblp_sw_filtered.edgelist")
