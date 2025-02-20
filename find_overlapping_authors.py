@@ -17,22 +17,33 @@ authors_G3 = G3.nodes()
 authors_G4 = G4.nodes()
 
 # Create a Venn diagram for four sets
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+
+
 
 venn3([authors_G1, authors_G2, authors_G3], 
       set_labels=('Data Mining', 'Software Engg', 'Computer Vision'),
-      set_colors=('red', 'blue', 'green'), ax=axes[0])
+      set_colors=('red', 'blue', 'green'), ax=axes[0, 0])
 
 venn3([authors_G1, authors_G2, authors_G4], 
       set_labels=('Data Mining', 'Software Engg', 'Human Robot Interaction'),
-      set_colors=('red', 'blue', 'yellow'), ax=axes[1])
+      set_colors=('red', 'blue', 'yellow'), ax=axes[0, 1])
 
 venn3([authors_G2, authors_G4, authors_G3], 
       set_labels=('Software Engg','Human Robot Interaction','Computer Vision'),
-      set_colors=('blue', 'yellow', 'green'), ax=axes[2])
+      set_colors=('blue', 'yellow', 'green'), ax=axes[1, 0])
 
-plt.title('Venn Diagram of Common Authors Across Four Graphs')
+venn3([authors_G1, authors_G4, authors_G3],  # Fixed last plot (previous duplicate)
+      set_labels=('Data Mining','Human Robot Interaction','Computer Vision'),
+      set_colors=('red', 'yellow', 'green'), ax=axes[1, 1])
+
+plt.suptitle('Venn Diagram of Common Authors Across Four Graphs', fontsize=14)
+for i, label in enumerate(['(a)', '(b)', '(c)', '(d)']):
+    axes[i//2, i%2].set_title(label, loc='center', fontsize=12)
+
+# plt.title('Venn Diagram of Common Authors Across Four Graphs')
 plt.tight_layout()
+plt.savefig('/Users/shrabanighosh/UNCC/Spring 2025/plos complex/fig/overlap.png')
 plt.show()
 
 
