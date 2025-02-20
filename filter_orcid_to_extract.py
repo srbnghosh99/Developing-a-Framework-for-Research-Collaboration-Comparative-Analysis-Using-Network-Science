@@ -2,18 +2,6 @@ import pandas as pd
 import ast
 from collections import defaultdict
 
-def convert_list_to_underscore(names_list):
-    if isinstance(names_list, str):  # Convert string to list if necessary
-        names_list = ast.literal_eval(names_list)
-        # print(names_list)
-    return [name.replace(" ", "_") for name in names_list]
-
-def convert_name_to_underscore(name):
-    # if isinstance(names_list, str):  # Convert string to list if necessary
-    #     names_list = ast.literal_eval(names_list)
-    #     # print(names_list)
-    return name.replace(" ", "_")
-
 df = pd.read_csv('/Users/shrabanighosh/UNCC/Spring 2025/plos complex/csvfiles/dblp.csv')
 df['authors_name'] = df['authors_name'].apply(ast.literal_eval)
 
