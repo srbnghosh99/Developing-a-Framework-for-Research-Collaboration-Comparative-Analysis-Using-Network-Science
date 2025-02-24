@@ -25,4 +25,4 @@ for index,row in df.iterrows():
         #path = root + path
         print(path)
         # Run parsexml.py with the file path as an argument
-        subprocess.run([sys.executable, 'parsexml_orcid.py', '--filepath', path])
+        subprocess.run([sys.executable, 'parseorcid.py', '--filepath', path])
