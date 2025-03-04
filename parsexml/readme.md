@@ -8,34 +8,31 @@ This document provides details on the input and output files for the following s
 ## 1. parsedblp.py
 
 ### **Input File**
-- **Format**: CSV
+- **Format**: xml
 - **Expected Columns**:
-  - `Column1`: Description
-  - `Column2`: Description
-  - ...
+- extract mdate ,name, title, crossref, pages, year, key, ee, url, date, booktitle, orcid id.  
 
 ### **Output File**
 - **Format**: CSV / JSON / TXT (Specify)
 - **Contents**:
-  - Processed data from the input file.
-  - Additional extracted or transformed information.
+  - Processed data from the input file and return dataframe which contains columns extract mdate ,name, title, crossref, pages, year, key, ee, url, date, booktitle, orcid id. 
 
 ## 2. parseorcid.py
 
 ### **Input File**
 - **Format**: CSV containing ORCID IDs
 - **Expected Columns**:
-  - `ORCID_IDs`: A list of ORCID identifiers.
-  - `Last_3_Digits`: A folder name identifier.
+  - `Last_3_Digits`: A folder name identifier (total 1100)
+  - `ORCID_IDs`: A list of ORCID identifiers (under each Last_3_Digits identifier)
+
 
 ### **Output Files**
 - **Format**: CSV / JSON / TXT (Specify)
 - **Contents**:
   - Extracted researcher details (name, email, affiliations, etc.).
-  - Aggregated data on research profiles.
 
 ## Usage
 Run the scripts using the following command:
 ```bash
-python parsedblp.py --input input_file.csv --output output_file.csv
+python parsedblp.py --input input_file.xml --outputdirectory output/
 python parseorcid.py --filepath input_file.csv
