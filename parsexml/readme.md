@@ -13,7 +13,7 @@ This document provides details on the input and output files for the following s
 - extract mdate ,name, title, crossref, pages, year, key, ee, url, date, booktitle, orcid id.  
 
 ### **Output File**
-- **Format**: CSV / JSON / TXT (Specify)
+- **Format**: CSV (Specify)
 - **Contents**:
   - Processed data from the input file and return dataframe which contains columns extract mdate ,name, title, crossref, pages, year, key, ee, url, date, booktitle, orcid id. 
 
