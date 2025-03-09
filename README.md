@@ -4,3 +4,5 @@
 -after getting orcid infomation, orcids are filtered for each domain for chosen conferences.
 2. create_graph.py
    - from Authors list from papers, create co-authorship graph from the list
+3. Count number of institutions either educational or companybased (for all domains)
+   - python3 count_instituion.py --dir domains
