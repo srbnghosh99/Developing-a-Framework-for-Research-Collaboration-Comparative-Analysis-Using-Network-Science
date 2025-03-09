@@ -4,16 +4,22 @@ import networkx as nx
 import numpy as np
 import argparse
 import os
+import matplotlib.pyplot as plt
+
 
 def function(directory):
     if not os.path.exists(directory):
-        return None
+        print("No existing directory")
 
     filelist = os.listdir(directory)
-    for file in filelist:
+    fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+    fig.suptitle('Distribution of Educational Instituion vs Company')
+    for i, (file, ax) in enumerate(zip(filelist, axes.flatten())):
+    # for file in filelist:
         print(file)
-        file = os.path.join(os.getcwd(),directory,file)
-        df = pd.read_csv(file)
+
+        filename = os.path.join(os.getcwd(),directory,file)
+        df = pd.read_csv(filename)
         # df[df['Institution'].notna()]
         # Filter rows where 'Institution' is not NaN
         filtered_df = df[df['Institution'].notna()]
@@ -31,6 +37,16 @@ def function(directory):
         # print(filtered_df['Educational_Institutions'])
         print("Educational Institutions:", edu_count * 100 / (edu_count + company_count))
         print("Companies:", company_count * 100 / (edu_count + company_count))
+        categories = ['Educational Institutions', 'Companies']
+        values1 = [edu_count * 100 / (edu_count + company_count), company_count * 100 / (edu_count + company_count)]
+
+        ax.bar(categories, values1, color='skyblue')
+        for i, v in enumerate(values1): ax.text(i, v + 1, f"{v:.1f}%", ha='center', fontsize=10)
+        ax.set_ylabel('Percentage')
+        ax.set_title(file)
+
+    plt.tight_layout()
+    plt.show()
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Read File")
