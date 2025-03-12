@@ -22,15 +22,18 @@ def extract_latest_info(affiliation):
     # if len(entries) == 1:
     return entries[0]
 
-def func1(directory):
+def Plot_count_institution(directory):
+    # Extract institution informaiton
     if not os.path.exists(directory):
         return None
     df = pd.read_csv('/Users/shrabanighosh/PycharmProjects/orcid_extract/orcid_data_output_2.csv')
     df['Latest_Info'] = df['Employement'].apply(extract_latest_info)
     df['institution'] = df['Latest_Info'].fillna('N/A').apply(find_first_bracket)
-    # df[['ID', 'Name', 'Email', 'Employement', 'institution']].to_csv('Employement.csv')
+    df = df.drop_duplicates(subset=['orcid'])
+    df[['orcid', 'Name','authors_name','Researcher_URL', 'Email', 'Employement', 'institution']].to_csv('Employement.csv')
+
     test = df
-    test = test.rename(columns={'ID': 'orcid'})
+    # test = test.rename(columns={'ID': 'orcid'})
     orcid_data = test[['orcid','Latest_Info', 'institution']]
     # fig, axes = plt.subplots(2, 2, figsize=(12, 8))
     # fig.suptitle('Distribution of Educational Instituion vs Company')
@@ -49,6 +52,7 @@ def func1(directory):
         merge_df = merge_df[
             ['orcid', 'authors_name', 'Name', 'Email', 'Researcher_URL', 'Education', 'Employement', 'Qualifications',
              'institution']]
+        merge_df = merge_df.drop_duplicates(subset=['orcid'])
         merge_df = merge_df.sort_values(by=['institution'])
         print(merge_df['institution'].value_counts())
         merge_df = merge_df[merge_df['institution'] != "N/A"]
@@ -61,6 +65,7 @@ def func1(directory):
         plt.xticks(rotation=90)
         plt.subplots_adjust(bottom=0.4)  # Adjust the bottom margin to make space for xticks
         plt.savefig(domain + '.png', bbox_inches='tight',dpi='figure')
+        merge_df.to_csv(filename, index=False)
         # plt.show()
 
         # ax.bar(merge_df['institution'].value_counts().nlargest(10).index,
@@ -80,9 +85,9 @@ def func1(directory):
         # ax.show()
     # plt.tight_layout()
     #     plt.show()
-        # merge_df.to_csv(filename, index=False)
 
-def func2(directory):
+def Plot_categories(directory):
+    # create visualization graph
     if not os.path.exists(directory):
         return None
 
@@ -90,7 +95,6 @@ def func2(directory):
     fig, axes = plt.subplots(2, 2, figsize=(12, 8))
     fig.suptitle('Distribution of Educational Instituion vs Company')
     for i, (file, ax) in enumerate(zip(filelist, axes.flatten())):
-    # for file in filelist:
         print(file)
 
         filename = os.path.join(os.getcwd(),directory,file)
@@ -99,24 +103,30 @@ def func2(directory):
         # Filter rows where 'Institution' is not NaN
         filtered_df = df[df['institution'].notna()]
 
+        classified_df = pd.read_csv("classified_institutions.csv")
+
+        merge = filtered_df.merge(classified_df, on = 'institution', how = 'inner')
+        # print(merge)
         # Define keywords for educational institutions and companies
-        edu_keywords = ['university', 'college', 'institute', 'school']
-        company_keywords = ['inc', 'llc', 'corp', 'company', 'ltd']
-
-        # Count educational institutions and companies
-        # filtered_df['Educational_Institutions'] = filtered_df[filtered_df['Institution'].str.lower().str.contains('|'.join(edu_keywords))]
-        # filtered_df['Companies'] = filtered_df[filtered_df['Institution'].str.lower().str.contains('|'.join(company_keywords))]
-        edu_count = filtered_df[filtered_df['institution'].str.lower().str.contains('|'.join(edu_keywords))].shape[0]
+        edu_keywords = ['university']
+        company_keywords = ['company']
+        rc_keywords = ['research']
+        merge['Category'] = np.where(merge['Category'].str.lower().str.contains('|'.join(edu_keywords)),
+                                       'University', merge['Category'])
+        merge['Category'] = np.where(merge['Category'].str.lower().str.contains('|'.join(company_keywords)),
+                                 'Company', merge['Category'])
+        merge['Category'] = np.where(merge['Category'].str.lower().str.contains('|'.join(rc_keywords)),
+                                 'Research Center', merge['Category'])
+        merge['Category'] = np.where(~merge['Category'].isin(['Research Center', 'Company', 'University']), 'Other', merge['Category'])
         company_count = filtered_df[filtered_df['institution'].str.lower().str.contains('|'.join(company_keywords))].shape[0]
+        rc_count = filtered_df[filtered_df['institution'].str.lower().str.contains('|'.join(rc_keywords))].shape[0]
 
-        # print(filtered_df['Educational_Institutions'])
-        print("Educational institution:", edu_count * 100 / (edu_count + company_count))
-        print("Companies:", company_count * 100 / (edu_count + company_count))
-        categories = ['Educational institution', 'Companies']
-        values1 = [edu_count * 100 / (edu_count + company_count), company_count * 100 / (edu_count + company_count)]
+        print(merge['Category'].value_counts())
+        value_count = merge['Category'].value_counts()
 
-        ax.bar(categories, values1, color='skyblue')
-        for i, v in enumerate(values1): ax.text(i, v + 1, f"{v:.1f}%", ha='center', fontsize=10)
+        ax.bar(value_count.index, value_count.values, color='skyblue')
+        [ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f'{bar.get_height() / sum(value_count) * 100:.1f}%',
+             ha='center', va='bottom') for bar in ax.containers[0]]
         ax.set_ylabel('Percentage')
         domain = file.replace(".csv", "")
         domain = domain.replace('_', ' ')
@@ -135,5 +145,5 @@ def parse_args():
 if __name__ == '__main__':
     inputs = parse_args()
     print(inputs.dir)
-    func1(inputs.dir)
-    func2(inputs.dir)
+    Plot_count_institution(inputs.dir)
+    Plot_categories(inputs.dir)
