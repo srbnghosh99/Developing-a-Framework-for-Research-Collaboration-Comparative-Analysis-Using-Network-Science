@@ -15,7 +15,7 @@ This document provides details on the input and output files for the following s
 ### **Output File**
 - **Format**: CSV (Specify)
 - **Contents**:
-  - Processed data from the input file and return dataframe which contains columns extract mdate ,name, title, crossref, pages, year, key, ee, url, date, booktitle, orcid id. 
+  - Processed data from the input file and return dataframe which contains columns extract mdate ,name,orcid_id, title, crossref, pages, year, key, ee, url, date, booktitle, orcid id. 
 
 ## 2. parseorcid.py
 
