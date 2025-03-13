@@ -1,0 +1,30 @@
+
+-------------------------------------------
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_cv_filtered_2022_2025.graphml nodes and edges: 34844 and 271094 
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_dm_filtered_2022_2025.graphml nodes and edges: 18336 and 77223 
+Total number of common users:  634 
+
+-------------------------------------------
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_cv_filtered_2022_2025.graphml nodes and edges: 34844 and 271094 
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_hri_filtered_2022_2025.graphml nodes and edges: 25239 and 124056 
+Total number of common users:  655 
+
+-------------------------------------------
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_cv_filtered_2022_2025.graphml nodes and edges: 34844 and 271094 
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_sw_filtered_2022_2025.graphml nodes and edges: 9417 and 32285 
+Total number of common users:  117 
+
+-------------------------------------------
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_dm_filtered_2022_2025.graphml nodes and edges: 18336 and 77223 
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_hri_filtered_2022_2025.graphml nodes and edges: 25239 and 124056 
+Total number of common users:  85 
+
+-------------------------------------------
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_dm_filtered_2022_2025.graphml nodes and edges: 18336 and 77223 
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_sw_filtered_2022_2025.graphml nodes and edges: 9417 and 32285 
+Total number of common users:  342 
+
+-------------------------------------------
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_hri_filtered_2022_2025.graphml nodes and edges: 25239 and 124056 
+/Users/shrabanighosh/PycharmProjects/orcid_extract/graphs/dblp_sw_filtered_2022_2025.graphml nodes and edges: 9417 and 32285 
+Total number of common users:  67 
