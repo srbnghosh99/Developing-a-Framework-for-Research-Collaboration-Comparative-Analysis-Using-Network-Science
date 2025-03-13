@@ -10,21 +10,30 @@ import argparse
 def convert_list_to_underscore(names_list):
     if isinstance(names_list, str):  # Convert string to list if necessary
         names_list = ast.literal_eval(names_list)
+        # print(names_list)
     return [name.replace(" ", "_") for name in names_list]
 
 
 def create_graph(inputfilename,outputfilename):
     new_df = pd.read_csv(inputfilename)
+    # print(new_df)
+    # new_df['authors_name'] = new_df['authors_name'].apply(convert_list_to_underscore)
 
-    new_df['authors_name'] = new_df['authors_name'].apply(convert_list_to_underscore)
-
-    # new_df['authors_name'] = new_df['authors_name'].apply(ast.literal_eval)
+    new_df['authors_name'] = new_df['authors_name'].apply(ast.literal_eval)
     authors_name_list = new_df['authors_name'].tolist()
     authors_names = list(itertools.chain.from_iterable(authors_name_list))
 
+    new_df['authors_orcid'] = new_df['authors_orcid'].apply(ast.literal_eval)
+    authors_orcid_list = new_df['authors_orcid'].tolist()
+    authors_orcids = list(itertools.chain.from_iterable(authors_orcid_list))
+
     G = nx.Graph()
-    for author in authors_names:
-        G.add_node(author)
+    for author,orcid in zip(authors_names,authors_orcids):
+        if orcid !='DA':
+            # print(orcid)
+            G.add_node(author, orcid_id = orcid)
+        else:
+            G.add_node(author)
     # print(G.nodes)
 
 
@@ -38,9 +47,16 @@ def create_graph(inputfilename,outputfilename):
                 G.add_edge(edge[0], edge[1],weight = timestamp)
             # break
 
-    print(G.number_of_nodes(), G.number_of_edges())
+    print("Number of nodes",G.number_of_nodes())
+    print("Number of edges",G.number_of_edges())
     # nx.write_weighted_edgelist(G, "dblp_sw_filtered.edgelist")
-    nx.write_weighted_edgelist(G, outputfilename)
+    # nx.write_weighted_edgelist(G, outputfilename)
+    nx.write_graphml(G, outputfilename)
+    for node in G.nodes(data=True):
+        print(node)
+        # break
+    # loaded_graphml = nx.read_graphml(outputfilename)
+    # print(loaded_graphml.nodes(data=True))
 
 
 def parse_args():
