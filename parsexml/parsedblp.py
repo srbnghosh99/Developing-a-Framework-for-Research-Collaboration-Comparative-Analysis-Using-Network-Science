@@ -31,6 +31,7 @@ def parse_dblp(inputpath,outputpath):
 
         mdate = []
         name = []
+        orcid = []
         title = []
         crossref = []
         pages = []
@@ -44,6 +45,7 @@ def parse_dblp(inputpath,outputpath):
         for index in tqdm(range(len(keysList))):
             flag = 0
             authors_name = []
+            authors_orcid = []
             if 'author' in keysList[index]:
                 authorlist = keysList[index]['author']
                 
@@ -52,27 +54,34 @@ def parse_dblp(inputpath,outputpath):
                         if isinstance(authors, dict):  # Check if the item is a dictionary
                                 authors_name.append(authors['#text'])  # Append the value of '#text' key
                                 flag = 1
+                                authors_orcid.append(authors['@orcid'])
                                 orcidid.append(authors['@orcid'])
                                 orcidname.append(authors['#text'])
                                 orcidbooktitle.append(keysList[index]['booktitle']) if 'booktitle' in keysList[index] else orcidbooktitle.append('')
 
                         else:
                                 authors_name.append(authors) 
+                                authors_orcid.append('')
                 else:
                     if isinstance(authorlist, dict):
                         authors_name.append(authorlist['#text'])
                         flag = 1
+                        authors_orcid.append(authorlist['@orcid'])
                         orcidid.append(authorlist['@orcid'])
                         orcidname.append(authorlist['#text'])
                         orcidbooktitle.append(keysList[index]['booktitle']) if 'booktitle' in keysList[index] else orcidbooktitle.append('')
                     else:    
                         authors_name.append(authorlist)
+                        authors_orcid.append('')
                         #print('authors',authors_name)
             else:
                 #print(index)
                 authors_name.append('')
+                authors_orcid.append('')
                 #print('authors',authors_name)
             name.append(authors_name)
+            orcid.append(authors_orcid)
+            print(len(name),len(orcid))
             title.append(keysList[index]['title']) if 'title' in keysList[index] else title.append('')
             #venue.append(keysList[index]['info']['venue']) if 'venue' in keysList[index] else venue.append('')
             pages.append(keysList[index]['pages']) if 'pages' in keysList[index] else pages.append('')
@@ -92,10 +101,10 @@ def parse_dblp(inputpath,outputpath):
         new_file_name = outputpath + '/' +  new_file_name
         print(new_file_name) 
         # df = pd.DataFrame({'score':score, 'id':id, 'authors_pid': pid,'authors_name':name, 'title':title, 'venue':venue, 'pages': pages, 'year':year, 'type':typ, 'access':access, 'key':key, 'doi':doi, 'ee':ee, 'url':url})
-        df = pd.DataFrame({'authors_name':name, 'title':title,'pages': pages, 'year':year,'data':date,'key':key,'ee':ee, 'url':url,'booktitle':booktitle,'crossref':crossref})
+        df = pd.DataFrame({'authors_name':name,'authors_orcid':orcid ,'title':title,'pages': pages, 'year':year,'data':date,'key':key,'ee':ee, 'url':url,'booktitle':booktitle,'crossref':crossref})
         df2 = pd.DataFrame({'orcid':orcidid,'authors_name':orcidname, 'title':orcidbooktitle})
         df.to_csv(new_file_name)
-        df2.to_csv('orcid_name_id.csv')
+        # df2.to_csv('orcid_name_id.csv')
 
 
 def parse_args():
