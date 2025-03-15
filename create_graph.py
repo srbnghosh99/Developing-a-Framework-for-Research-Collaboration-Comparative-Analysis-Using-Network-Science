@@ -27,11 +27,18 @@ def create_graph(inputfilename,outputfilename):
     authors_orcid_list = new_df['authors_orcid'].tolist()
     authors_orcids = list(itertools.chain.from_iterable(authors_orcid_list))
 
+    new_df['authors_aff'] = new_df['authors_aff'].apply(ast.literal_eval)
+    authors_orcid_list = new_df['authors_aff'].tolist()
+    authors_aff = list(itertools.chain.from_iterable(authors_orcid_list))
+
     G = nx.Graph()
-    for author,orcid in zip(authors_names,authors_orcids):
-        if orcid !='DA':
-            # print(orcid)
-            G.add_node(author, orcid_id = orcid)
+    for author,orcid,aff in zip(authors_names,authors_orcids,authors_aff):
+        if orcid !='DA' and aff != 'DA':
+            G.add_node(author, orcid_id = orcid, affiliation = aff)
+        elif orcid !='DA':
+            G.add_node(author, orcid_id=orcid)
+        elif aff !='DA':
+            G.add_node(author, affiliation = aff)
         else:
             G.add_node(author)
     # print(G.nodes)
