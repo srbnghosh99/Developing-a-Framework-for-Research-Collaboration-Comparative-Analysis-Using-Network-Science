@@ -21,9 +21,11 @@ def draw_tripart(graphfile1, graphfile2, graphfile3,outfile):
     # Create a bipartite graph
     B = nx.Graph()
     df['avg_degree'] = df[['Degree1', 'Degree2', 'Degree3']].mean(axis=1)
-    domain1_node = "CV"
-    domain2_node = "HRI"
-    domain3_node = "DM"
+    # domain1_node, domain2_node, domain3_node = "CV", "HRI", "DM"
+    # domain1_node, domain2_node, domain3_node = "CV", "HRI", "SW"
+    # domain1_node, domain2_node, domain3_node = "CV", "DM", "SW"
+    domain1_node, domain2_node, domain3_node = "DM", "HRI", "SW"
+
     B.add_node(domain1_node, bipartite=0, size=2000)
     B.add_node(domain2_node, bipartite=0, size=2000)
     B.add_node(domain3_node, bipartite=0, size=2000)

@@ -1,14 +1,14 @@
 import networkx as nx
 import argparse
 import pandas as pd
-
+import create_tripartite
 def check_digits(text):
     return any(char.isdigit() for char in text)
 
 def normalize_name(name):
     return name.replace(' ', '_')
 
-def func(graphfile1,graphfile2,graphfile3,file1,file2,file3):
+def func(graphfile1,graphfile2,graphfile3,file1,file2,file3,outfile):
     with open("output.txt", "r+") as file:
         content = file.read()
         file.write(f'\n')
@@ -42,21 +42,30 @@ def func(graphfile1,graphfile2,graphfile3,file1,file2,file3):
 
         # Find common normalized names
         common_normalized_names = (set(normalized_G1.keys()) & set(normalized_G2.keys())  & set(normalized_G3.keys()))
-
+        df3 = pd.read_csv('domains/Computer_Vision.csv')
+        df4 = pd.read_csv('domains/Human_Robot_Interaction.csv')
+        df5 = pd.read_csv('domains/Software_Engineering.csv')
         lis = []
         matched_count = 0
         for name in common_normalized_names:
             node1, node2, node3 = normalized_G1[name], normalized_G2[name], normalized_G3[name]
-            if check_digits(node1):
-                if node1 == node2 == node3:
+            if node1 == node2:
+                others1 = df3[df3['authors_name'].str.contains(node1)]
+                others2 = df4[df4['authors_name'].str.contains(node1)]
+                others3 = df5[df5['authors_name'].str.contains(node1)]
+                # print(others['authors_name'].tolist())
+                if (others1['authors_name'].tolist() == 1 or others2['authors_name'].tolist() == 1 or others3['authors_name'].tolist() == 1):
                     lis.append(node1)
-                    # print(node1, node2)
+                    print(node1, node2)
+                    matched_count += 1
+                elif check_digits(node1):
+                    lis.append(node1)
+                    print(node1, node2)
                     matched_count += 1
                 else:
                     continue
 
         for node in common_nodes:
-
             attrs1, attrs2, attrs3= G1.nodes[node], G2.nodes[node], G3.nodes[node]
             if len(attrs1) != 0:
                 if attrs1 == attrs2 == attrs3:
@@ -135,7 +144,8 @@ def func(graphfile1,graphfile2,graphfile3,file1,file2,file3):
 
         print(merge_df)
         merge_df.to_csv('test.csv')
-        # create_bipartite(df_degree1,df_degree2)
+
+        create_tripartite.draw_tripart(graphfile1, graphfile2, graphfile3,outfile)
 
         # print(df_degree1,df_degree2)
 
@@ -148,6 +158,7 @@ def parse_args():
     parser.add_argument("--file1", type=str, required=True, help="Path to input CSV file")
     parser.add_argument("--file2", type=str, required=True, help="Path to input CSV file")
     parser.add_argument("--file3", type=str, required=True, help="Path to input CSV file")
+    parser.add_argument("--outfile", type=str, required=True, help="Path to input CSV file")
     # parser.add_argument("--file4", type=str, required=True, help="Path to input CSV file")
     # parser.add_argument("--outfile", type=str, required=True, help="Path to input CSV file")
     return parser.parse_args()
@@ -155,4 +166,4 @@ def parse_args():
 if __name__ == '__main__':
     inputs = parse_args()
     # print(f"📂 Processing ORCID data from: {inputs.filepath}")
-    func(inputs.graphfile1,inputs.graphfile2,inputs.graphfile3,inputs.file1,inputs.file2,inputs.file3)
+    func(inputs.graphfile1,inputs.graphfile2,inputs.graphfile3,inputs.file1,inputs.file2,inputs.file3,inputs.outfile)
