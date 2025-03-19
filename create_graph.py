@@ -31,16 +31,28 @@ def create_graph(inputfilename,outputfilename):
     authors_orcid_list = new_df['authors_aff'].tolist()
     authors_aff = list(itertools.chain.from_iterable(authors_orcid_list))
 
+    new_df['authors_ins'] = new_df['authors_ins'].apply(ast.literal_eval)
+    authors_orcid_list = new_df['authors_ins'].tolist()
+    authors_inst = list(itertools.chain.from_iterable(authors_orcid_list))
+
     G = nx.Graph()
-    for author,orcid,aff in zip(authors_names,authors_orcids,authors_aff):
-        if orcid !='DA' and aff != 'DA':
-            G.add_node(author, orcid_id = orcid, affiliation = aff)
-        elif orcid !='DA':
-            G.add_node(author, orcid_id=orcid)
-        elif aff !='DA':
-            G.add_node(author, affiliation = aff)
-        else:
-            G.add_node(author)
+    for author, orcid, aff, inst in zip(authors_names, authors_orcids, authors_aff, authors_inst):
+        node_attrs = {
+            "orcid_id": orcid if orcid != "DA" else "",
+            "affiliation": aff if aff != "DA" else "",
+            "institution": inst if inst != "DA" else ""
+        }
+        G.add_node(author, **node_attrs)
+
+    # for author,orcid,aff,inst in zip(authors_names,authors_orcids,authors_aff,authors_inst):
+    #     if orcid !='DA' and aff != 'DA' and inst != 'DA' :
+    #         G.add_node(author, orcid_id = orcid, affiliation = aff, institution = inst)
+    #     elif orcid !='DA' and aff == 'DA':
+    #         G.add_node(author, orcid_id=orcid, affiliation = '')
+    #     elif aff !='DA' and orcid == 'DA':
+    #         G.add_node(author,orcid_id = '' ,affiliation = aff)
+    #     else:
+    #         G.add_node(author,orcid_id = '',affiliation = '')
     # print(G.nodes)
 
 
