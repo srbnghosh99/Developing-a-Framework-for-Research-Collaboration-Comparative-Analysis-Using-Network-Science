@@ -36,18 +36,22 @@ def get_aff_info(file1,file2):
     df['authors_name'] = df['authors_name'].apply(ast.literal_eval)
 
     df['authors_aff'] =''
+    df['authors_ins'] = ''
     for index,row in df.iterrows():
         lis = row['authors_name']
         aff =authors_info[authors_info['authors_name'].isin(lis)]
         aff_mapping = aff.set_index('authors_name')['Category'].to_dict()
+        aff_institution = aff.set_index('authors_name')['institution'].to_dict()
         # Generate the final list with mapped values or 'DA' if not found
         aff_list = [aff_mapping.get(name, 'DA') for name in lis]
+        ins_list = [aff_institution.get(name, 'DA') for name in lis]
         df.at[index, 'authors_aff'] = aff_list
+        df.at[index, 'authors_ins'] = ins_list
     df['collab_type'] = df['authors_aff'].apply(collab_type)
-    print(df[['authors_aff', 'collab_type']])
+    print(df[['authors_aff', 'authors_ins']])
     print(df.columns)
     df = df[['authors_name','authors_orcid', 'title', 'pages', 'year', 'data', 'key', 'ee', 'url',
-       'booktitle', 'crossref', 'authors_aff', 'collab_type']]
+       'booktitle', 'crossref', 'authors_aff','authors_ins','collab_type']]
     df.to_csv(file2)
 
 
