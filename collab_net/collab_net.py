@@ -17,22 +17,25 @@ def collab_type(lst):
 
 def get_aff_info(file1,file2):
 
-    # df_class = pd.read_csv('classified_institutions.csv')
-    # df = pd.read_csv(file1)
-    # print(df.shape)
-    # df = df.merge(df_class, on = 'institution', how = 'left')
-    # # df.to_csv(file1)
-    #
-    # print(df)
+    df_class = pd.read_csv('classified_institutions.csv')
+    df = pd.read_csv(file1)
+    print(df.shape)
+    df = df.merge(df_class, on = 'institution', how = 'left')
+    df['Category'].fillna('DA', inplace=True)
+    df['institution'].fillna('DA', inplace=True)
+    df.to_csv(file1)
 
-    df = pd.read_csv(file2)
-    df[['authors_name','authors_orcid']]
     authors_info = pd.read_csv(file1)
     authors_info['Category'].fillna('DA', inplace=True)
-    print(authors_info['Category'].value_counts())
-    authors_info.to_csv(file1)
+    authors_info['institution'].fillna('DA', inplace=True)
+    # print(authors_info['Category'].value_counts())
+    # authors_info.to_csv(file1)
     # print(df), print(authors_info)
 
+
+
+    df = pd.read_csv(file2)
+    df[['authors_name', 'authors_orcid']]
     df['authors_name'] = df['authors_name'].apply(ast.literal_eval)
 
     df['authors_aff'] =''
@@ -44,6 +47,8 @@ def get_aff_info(file1,file2):
         aff_institution = aff.set_index('authors_name')['institution'].to_dict()
         # Generate the final list with mapped values or 'DA' if not found
         aff_list = [aff_mapping.get(name, 'DA') for name in lis]
+        # ins_list = [aff_institution.get(name, 'DA') if name == name else 'DA' for name in lis]
+
         ins_list = [aff_institution.get(name, 'DA') for name in lis]
         df.at[index, 'authors_aff'] = aff_list
         df.at[index, 'authors_ins'] = ins_list

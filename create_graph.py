@@ -9,6 +9,9 @@ import argparse
 
 def convert_list_to_underscore(names_list):
     if isinstance(names_list, str):  # Convert string to list if necessary
+
+        names_list = ['DA' if x != x else x for x in names_list]
+        print(names_list)
         names_list = ast.literal_eval(names_list)
         # print(names_list)
     return [name.replace(" ", "_") for name in names_list]
@@ -17,7 +20,7 @@ def convert_list_to_underscore(names_list):
 def create_graph(inputfilename,outputfilename):
     new_df = pd.read_csv(inputfilename)
     # print(new_df)
-    # new_df['authors_name'] = new_df['authors_name'].apply(convert_list_to_underscore)
+    # new_df['authors_ins'] = new_df['authors_ins'].apply(convert_list_to_underscore)
 
     new_df['authors_name'] = new_df['authors_name'].apply(ast.literal_eval)
     authors_name_list = new_df['authors_name'].tolist()
@@ -32,6 +35,7 @@ def create_graph(inputfilename,outputfilename):
     authors_aff = list(itertools.chain.from_iterable(authors_orcid_list))
 
     new_df['authors_ins'] = new_df['authors_ins'].apply(ast.literal_eval)
+    print(new_df['authors_ins'][0][0])
     authors_orcid_list = new_df['authors_ins'].tolist()
     authors_inst = list(itertools.chain.from_iterable(authors_orcid_list))
 
