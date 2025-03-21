@@ -17,13 +17,13 @@ def collab_type(lst):
 
 def get_aff_info(file1,file2):
 
-    df_class = pd.read_csv('classified_institutions.csv')
-    df = pd.read_csv(file1)
-    print(df.shape)
-    df = df.merge(df_class, on = 'institution', how = 'left')
-    df['Category'].fillna('DA', inplace=True)
-    df['institution'].fillna('DA', inplace=True)
-    df.to_csv(file1)
+    # df_class = pd.read_csv('classified_institutions.csv')
+    # df = pd.read_csv(file1)
+    # print(df.shape)
+    # df = df.merge(df_class, on = 'institution', how = 'left')
+    # df['Category'].fillna('DA', inplace=True)
+    # df['institution'].fillna('DA', inplace=True)
+    # df.to_csv(file1)
 
     authors_info = pd.read_csv(file1)
     authors_info['Category'].fillna('DA', inplace=True)
