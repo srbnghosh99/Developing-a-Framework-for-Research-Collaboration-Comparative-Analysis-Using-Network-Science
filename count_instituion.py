@@ -59,9 +59,16 @@ def Plot_count_institution(directory):
              'institution']]
         merge_df = merge_df.drop_duplicates(subset=['orcid'])
         merge_df = merge_df.sort_values(by=['institution'])
-        print(merge_df['institution'].value_counts())
+        # print(merge_df['institution'].value_counts())
         merge_df = merge_df[merge_df['institution'] != "N/A"]
-        merge_df['institution'].value_counts().nlargest(30).to_csv(file +'_top.csv')
+        classify_institutions = pd.read_csv('classified_institutions4.csv')
+        print(classify_institutions.shape)
+
+        merge_df = merge_df['institution'].value_counts().nlargest(30).reset_index()
+        merge_df = merge_df.merge(classify_institutions, on='institution', how='left')
+        merge_df = merge_df[['institution', 'count','Category']]
+        # print(merge_df)
+        merge_df.to_csv(file +'_top.csv')
         # merge_df['institution'].value_counts().nlargest(30).plot(kind='barh', figsize=(10, 5), color='skyblue')
 
         # plt.barh(institution_names, counts)  # Use barh for horizontal bars
@@ -147,7 +154,14 @@ def Plot_categories(directory):
 
         merge = filtered_df.merge(classified_df, on='institution', how='inner')
         print(merge['Category'].value_counts())
+        # value_count = merge['Category'].value_counts()
+
+        category_order = ["University", "Company", "Research Center", "Company Research Lab", "Other"]
+
+        # Get value counts and reindex to maintain the desired order
         value_count = merge['Category'].value_counts()
+        print(value_count)
+        value_count = value_count.reindex(category_order, fill_value=0)  # Fill missing categories with 0
 
         ax.bar(value_count.index, value_count.values, color='skyblue')
         [ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f'{bar.get_height() / sum(value_count) * 100:.1f}%',
@@ -156,8 +170,13 @@ def Plot_categories(directory):
         domain = file.replace(".csv", "")
         domain = domain.replace('_', ' ')
         ax.set_title(domain); ax.tick_params(axis='x', rotation=45)
+        print(filtered_df.columns)
+        merge = merge[['orcid', 'authors_name',
+                                   'Name', 'Email', 'Researcher_URL', 'Education', 'Employement',
+                                   'Qualifications', 'institution','Category']]
+        # merge.to_csv(file)
     plt.tight_layout()
-    plt.savefig('percentage.png', bbox_inches='tight', dpi='figure')
+    plt.savefig('percentage.pdf', bbox_inches='tight', dpi=400)
 
     plt.show()
 
